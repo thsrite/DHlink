@@ -20,7 +20,7 @@ docker run -d --name dhlink -v /电影目录:/mnt/movies -v /电视剧目录:/mn
 或
 
 ```
-docker push thsrite/dhlink:latest
+docker pull thsrite/dhlink:latest
 docker run -d --name dhlink -v /电影目录:/mnt/movies -v /电视剧目录:/mnt/series -v /配置文件目录/config.yaml:/mnt/config.yaml dhlink
 ```
 配置文件config.yaml

@@ -3,12 +3,11 @@ import yaml
 import os
 from date import daysBetweenDates
 from media import Media
-import logging
 
 """
 检索列表并按文件类型分组
 """
-def search(mediaList, filePath, dictoryList, canDelMovieList, dictoryDict, movieDict):
+def search(mediaList, filePath, dictoryList, canDelMovieList, dictoryDict, movieDict, logger):
 
     # 视频格式
     movieExt = ["mkv", "mp4", "flv", "avi", "mov", "wmv", "rmvb", "m4v"]
@@ -28,6 +27,7 @@ def search(mediaList, filePath, dictoryList, canDelMovieList, dictoryDict, movie
         # 属性分割填充
         fileClass = file.split(" ")
 
+        # print(fileClass)
         # 排除不合规的文件
         if len(fileClass) >= 7:
 
@@ -83,7 +83,7 @@ def search(mediaList, filePath, dictoryList, canDelMovieList, dictoryDict, movie
                         subMovieList.append(media)
 
                         # 判断文件是否需要删除
-                        checkFile(media, canDelMovieList)
+                        checkFile(media, canDelMovieList, logger)
 
     # 文件夹字典填充
     dictoryDict[filePath] = subDictoryList
@@ -96,16 +96,8 @@ def search(mediaList, filePath, dictoryList, canDelMovieList, dictoryDict, movie
 硬连接数 == 1
 存活时间 > 7 天
 """
-def checkFile(file, canDelMovieList):
-    logging.basicConfig(filename="dhlink", format='%(asctime)s - %(name)s - %(levelname)s -%(module)s:  %(message)s',
-                        datefmt='%Y-%m-%d %H:%M:%S ',
-                        level=logging.INFO)
-    logger = logging.getLogger()
-    KZT = logging.StreamHandler()
-    KZT.setLevel(logging.DEBUG)
-    logger.addHandler(KZT)
-
-    filepath = os.path.join("/mnt", 'config.yaml')  # 文件路径,这里需要将a.yaml文件与本程序文件放在同级目录下
+def checkFile(file, canDelMovieList, logger):
+    filepath = os.path.join("/mnt/", 'config.yaml')  # 文件路径,这里需要将a.yaml文件与本程序文件放在同级目录下
     with open(filepath, 'r') as f:  # 用with读取文件更好
         configs = yaml.load(f, Loader=yaml.FullLoader)  # 按字典格式读取并返回
 

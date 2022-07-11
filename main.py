@@ -9,16 +9,16 @@ import logging
 from arrayUtil import getNonRepeatList
 from emailUtil import sendmail
 from search import search
-# from sshClient import SSHClient
 
-def check():
-    logging.basicConfig(filename="dhlink", format='%(asctime)s - %(name)s - %(levelname)s -%(module)s:  %(message)s',
+logging.basicConfig(filename="dhlink", format='%(asctime)s - %(name)s - %(levelname)s -%(module)s:  %(message)s',
                         datefmt='%Y-%m-%d %H:%M:%S ',
                         level=logging.INFO)
-    logger = logging.getLogger()
-    KZT = logging.StreamHandler()
-    KZT.setLevel(logging.DEBUG)
-    logger.addHandler(KZT)
+logger = logging.getLogger()
+KZT = logging.StreamHandler()
+KZT.setLevel(logging.DEBUG)
+logger.addHandler(KZT)
+
+def check():
 
     # 视频目录
     bootDictoryList = [
@@ -28,7 +28,7 @@ def check():
 
     # 建立ssh连接
     # getClient = SSHClient()
-    # ssh = getClient.sshConnection('root', '***', '192.168.31.12')
+    # ssh = getClient.sshConnection('root', 'Jxd283465', '192.168.31.103')
 
     # 可删除的视频列表
     canDelMovieList = []
@@ -54,11 +54,12 @@ def check():
             # print(dictory)
             # 获取电影列表
             if dictory != '':
-                result = os.system('cd ' + dictory.replace("\\", "") + ' ;ls -l --time-style="+%Y-%m-%d %H:%I:%S"')
+                # result = os.system('cd ' + dictory.replace("\\", "") + ' ;ls -l --time-style="+%Y-%m-%d %H:%I:%S"')
+                result = os.popen('cd ' + dictory.replace("\\", "") + ' ;ls -l --time-style="+%Y-%m-%d %H:%I:%S"')
                 # result = getClient.sshExecByOne(ssh, 'cd ' + dictory.replace("\\", "") + ' ;ls -l --time-style="+%Y-%m-%d %H:%I:%S"')
 
                 # 换行转为数组
-                mediaList = str(result).split("\n")
+                mediaList = str(result.read()).split("\n")
 
                 # 删除total行
                 mediaList.pop(0)
@@ -66,7 +67,7 @@ def check():
                 # print(mediaList)
 
                 # 继续遍历获取全部视频文件
-                search(mediaList, dictory, dictoryList, canDelMovieList, dictoryDict, movieDict)
+                search(mediaList, dictory, dictoryList, canDelMovieList, dictoryDict, movieDict, logger)
 
                 # print(dictoryList)
 
@@ -187,6 +188,34 @@ def check():
 
     logger.info("有关联不建议删除视频路径列表==》" + json.dumps(waitDelMoviePathList))
 
+    # 删除逻辑
+    if bool(configs["sync"]["auto_del"]) == True:
+        # 删除文件夹
+        for dic in canDelDictoryList:
+
+            canDel = 0
+            # 只有目录在跟路径下，则可删除
+            for boot in bootDictoryList:
+                if str(dic).startswith(str(boot)):
+                    canDel = 1
+
+            if canDel == 1:
+                os.system('rm -rf ' + dic)
+                logger.warning("删除文件夹[" + dic + "]")
+
+        # 删除视频路径
+        for movie in canDelMoviePathList:
+
+            canDel = 0
+            # 只有目录在跟路径下，则可删除
+            for boot in bootDictoryList:
+                if str(movie).startswith(str(boot)):
+                    canDel = 1
+
+            if canDel == 1:
+                os.system('rm -rf ' + movie)
+                logger.warning("删除视频路径[" + movie + "]")
+
     try:
         # 发送邮件通知
         sendmail(canDelDictoryList, canDelMoviePathList, waitDelMoviePathList)
@@ -199,7 +228,7 @@ def check():
     # getClient.close(ssh)
 
 if __name__ == '__main__':
-    filepath = os.path.join("/mnt", 'config.yaml')  # 文件路径,这里需要将a.yaml文件与本程序文件放在同级目录下
+    filepath = os.path.join("/mnt/", 'config.yaml')  # 文件路径,这里需要将a.yaml文件与本程序文件放在同级目录下
     with open(filepath, 'r') as f:  # 用with读取文件更好
         configs = yaml.load(f, Loader=yaml.FullLoader)  # 按字典格式读取并返回
 

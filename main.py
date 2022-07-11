@@ -1,3 +1,4 @@
+from datetime import datetime
 import json
 import smtplib
 import os
@@ -233,5 +234,7 @@ if __name__ == '__main__':
         configs = yaml.load(f, Loader=yaml.FullLoader)  # 按字典格式读取并返回
 
     while True:
+        date_p = datetime.now().date()
+        logger.info("洗版日期：" + str(date_p))
         check()
         time.sleep(int(configs["sync"]["time"]))

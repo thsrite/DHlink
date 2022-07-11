@@ -17,14 +17,18 @@ def sendmail(canDelDictoryList, canDelMoviePathList, waitDelMoviePathList):
     sender = mail_user
     receivers = str(configs["stmp"]["to_addr"])  # 接收邮件，可设置为你的QQ邮箱或者其他邮箱
 
+    # 删除逻辑
+    auto_del = bool(configs["sync"]["auto_del"])
+
     title = '仅统计创建7天以上，文件大小100M以上的视频及文件夹\n\n' \
-              '没有硬链的视频路径如下：\n'
+              '没有硬链的视频路径如下：' + ('(auto_del=true，已自动删除)\n' if auto_del else '\n')
+
     for moviePath in canDelMoviePathList:
         title = title + moviePath + "\n\n"
 
     title = title + "\n\n"
 
-    title = title + '没有硬链的视频对应的文件夹路径如下：\n'
+    title = title + '没有硬链的视频对应的文件夹路径如下：' + ('(auto_del=true，已自动删除)\n' if auto_del else '\n')
     for dictoryPath in canDelDictoryList:
         title = title + dictoryPath + "\n\n"
 

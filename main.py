@@ -11,10 +11,15 @@ from emailUtil import sendmail
 from search import search
 # from sshClient import SSHClient
 
-logger = logging.getLogger('DHlink')
-
-
 def check():
+    logging.basicConfig(filename="dhlink", format='%(asctime)s - %(name)s - %(levelname)s -%(module)s:  %(message)s',
+                        datefmt='%Y-%m-%d %H:%M:%S ',
+                        level=logging.INFO)
+    logger = logging.getLogger()
+    KZT = logging.StreamHandler()
+    KZT.setLevel(logging.DEBUG)
+    logger.addHandler(KZT)
+
     # 视频目录
     bootDictoryList = [
         '/mnt/movies/',
@@ -201,5 +206,3 @@ if __name__ == '__main__':
     while True:
         check()
         time.sleep(int(configs["sync"]["time"]))
-
-

@@ -3,6 +3,7 @@ import yaml
 import os
 from date import daysBetweenDates
 from media import Media
+import logging
 
 """
 检索列表并按文件类型分组
@@ -96,6 +97,14 @@ def search(mediaList, filePath, dictoryList, canDelMovieList, dictoryDict, movie
 存活时间 > 7 天
 """
 def checkFile(file, canDelMovieList):
+    logging.basicConfig(filename="dhlink", format='%(asctime)s - %(name)s - %(levelname)s -%(module)s:  %(message)s',
+                        datefmt='%Y-%m-%d %H:%M:%S ',
+                        level=logging.INFO)
+    logger = logging.getLogger()
+    KZT = logging.StreamHandler()
+    KZT.setLevel(logging.DEBUG)
+    logger.addHandler(KZT)
+
     filepath = os.path.join("/mnt", 'config.yaml')  # 文件路径,这里需要将a.yaml文件与本程序文件放在同级目录下
     with open(filepath, 'r') as f:  # 用with读取文件更好
         configs = yaml.load(f, Loader=yaml.FullLoader)  # 按字典格式读取并返回
@@ -122,10 +131,10 @@ def checkFile(file, canDelMovieList):
     if int(file.hLintCnt) == 1:
         # 存活大于7天，加入可删除列表
         if fileExitDays > int(configs["sync"]["search_day"]) and size > int(configs["sync"]["search_size"]):
-            print("没有硬连接", "存活：" + str(fileExitDays) + "天", fileSize, file.fileDate, file.fileTime, file.fileName,
-                  file.fileExt, file.filePath)
+            logger.warning("没有硬连接 存活：" + str(fileExitDays) + "天 " + fileSize + " " +
+                           file.fileDate + " " + file.fileTime + " " + file.fileName + " " +
+                           file.fileExt + " " + file.filePath)
             canDelMovieList.append(file)
-
 
 def itertor(dictoryDict, canDelDictory, canDelDictoryList):
     for dict in dictoryDict:

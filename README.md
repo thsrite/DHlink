@@ -35,3 +35,11 @@ docker run -d --name dhlink -v /电影目录:/mnt/movies -v /电视剧目录:/mn
       search_day: 7 #扫描创建时间多少天以上的视频
       search_size: 100 #扫描文件大小多少M以上的视频
       auto_del: false #是否自动删除可删除文件夹及可删除视频，不会删除有关联不建议删除的视频， 默认false。谨慎用true
+
+![不删除仅提醒](https://raw.githubusercontent.com/jiangxd0716/DHlink/master/photo/不删除不提醒.png)
+
+![自动删除且提醒](https://raw.githubusercontent.com/jiangxd0716/DHlink/master/photo/删除.png)
+
+![邮件提醒](https://raw.githubusercontent.com/jiangxd0716/DHlink/master/photo/WechatIMG177.png)
+
+![邮件提醒](https://raw.githubusercontent.com/jiangxd0716/DHlink/master/photo/WechatIMG178.jpeg)

@@ -3,11 +3,15 @@ import os
 import time
 from copy import deepcopy
 import yaml
+import logging
 
 from arrayUtil import getNonRepeatList
 from emailUtil import sendmail
 from search import search
 # from sshClient import SSHClient
+
+logger = logging.getLogger('DHlink')
+
 
 def check():
     # 视频目录
@@ -171,19 +175,19 @@ def check():
             if canDelDictory in canDelDictoryList and i > 0:
                 canDelDictoryList.remove(canDelDictory)
 
-    print(canDelDictoryList)
+    logger.info("可删除文件夹列表==》" + canDelDictoryList)
 
-    print(canDelMoviePathList)
+    logger.info("可删除视频路径列表==》"+ canDelMoviePathList)
 
-    print(waitDelMoviePathList)
+    logger.info("有关联不建议删除视频路径列表==》"+ waitDelMoviePathList)
 
     try:
         # 发送邮件通知
         sendmail(canDelDictoryList, canDelMoviePathList, waitDelMoviePathList)
-        print("邮件发送成功")
+        logger.info("邮件发送成功")
 
     except smtplib.SMTPException:
-        print("Error: 无法发送邮件")
+        logger.error("Error: 无法发送邮件")
     # 关闭ssh连接
 
     # getClient.close(ssh)

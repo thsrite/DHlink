@@ -7,7 +7,6 @@ import paramiko
 from paramiko.py3compat import u
 import time
 
-
 class SSHClient(object):
     '''
     @attention: 关闭 ssh 链接

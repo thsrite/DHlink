@@ -1,3 +1,4 @@
+import json
 import smtplib
 import os
 import time
@@ -175,11 +176,11 @@ def check():
             if canDelDictory in canDelDictoryList and i > 0:
                 canDelDictoryList.remove(canDelDictory)
 
-    logger.info("可删除文件夹列表==》" + canDelDictoryList)
+    logger.info("可删除文件夹列表==》" + json.dumps(canDelDictoryList))
 
-    logger.info("可删除视频路径列表==》"+ canDelMoviePathList)
+    logger.info("可删除视频路径列表==》" + json.dumps(canDelMoviePathList))
 
-    logger.info("有关联不建议删除视频路径列表==》"+ waitDelMoviePathList)
+    logger.info("有关联不建议删除视频路径列表==》" + json.dumps(waitDelMoviePathList))
 
     try:
         # 发送邮件通知

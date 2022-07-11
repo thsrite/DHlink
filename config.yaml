@@ -6,3 +6,5 @@ stmp:
 
 sync:
   time: 86400
+  search_day: 7
+  search_size: 100

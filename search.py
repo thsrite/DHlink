@@ -1,5 +1,6 @@
 from datetime import datetime
-
+import yaml
+import os
 from date import daysBetweenDates
 from media import Media
 
@@ -95,6 +96,10 @@ def search(mediaList, filePath, dictoryList, canDelMovieList, dictoryDict, movie
 存活时间 > 7 天
 """
 def checkFile(file, canDelMovieList):
+    filepath = os.path.join("/mnt", 'config.yaml')  # 文件路径,这里需要将a.yaml文件与本程序文件放在同级目录下
+    with open(filepath, 'r') as f:  # 用with读取文件更好
+        configs = yaml.load(f, Loader=yaml.FullLoader)  # 按字典格式读取并返回
+
     # 文件大小--M
     size = int(file.fileSize) / 1024 / 1024
 
@@ -116,7 +121,7 @@ def checkFile(file, canDelMovieList):
     # 硬连接数量为1 == 没有硬连接
     if int(file.hLintCnt) == 1:
         # 存活大于7天，加入可删除列表
-        if fileExitDays > 7 and size > 100:
+        if fileExitDays > int(configs["sync"]["search_day"]) and size > int(configs["sync"]["search_size"]):
             print("没有硬连接", "存活：" + str(fileExitDays) + "天", fileSize, file.fileDate, file.fileTime, file.fileName,
                   file.fileExt, file.filePath)
             canDelMovieList.append(file)

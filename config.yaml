@@ -1,0 +1,8 @@
+stmp:
+  host: smtp.163.com
+  from_addr: 111@163.com
+  password: 111
+  to_addr: 111@163.com
+
+sync:
+  time: 86400

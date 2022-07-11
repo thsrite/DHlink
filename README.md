@@ -19,9 +19,13 @@ docker run -d --name dhlink -v /电影目录:/mnt/movies -v /电视剧目录:/mn
 配置文件config.yaml
 
 stmp:
+
   host: smtp.163.com #163邮箱stmp host
+  
   from_addr: 111@163.com #163发件邮箱
+  
   password: 111 #163发件邮箱密码
+  
   to_addr: 111@163.com #接收邮件邮箱
 
 sync:

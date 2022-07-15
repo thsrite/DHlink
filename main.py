@@ -104,10 +104,10 @@ def check():
         if i == 0:
             fileRoutes = str(file.fileRoute).split("/")
             parentRoute = ""
-            for i in range(len(fileRoutes) - 1):
-                parentRoute = parentRoute + fileRoutes[i] + "/"
+            for j in range(len(fileRoutes) - 1):
+                parentRoute = parentRoute + fileRoutes[j] + "/"
                 for boot in bootDictoryList:
-                    if str(boot) in parentRoute:
+                    if str(boot) in parentRoute and boot != parentRoute:
                         for movie in movieDict[parentRoute]:
                             if movie.filePath not in canDelMoviePathList:
                                 i = 1
@@ -257,8 +257,8 @@ if __name__ == '__main__':
     with open(filepath, 'r') as f:  # 用with读取文件更好
         configs = yaml.load(f, Loader=yaml.FullLoader)  # 按字典格式读取并返回
 
-    while True:
+    # while True:
         date_p = datetime.now().date()
         logger.info("洗版日期：" + str(date_p))
         check()
-        time.sleep(int(configs["sync"]["time"]))
+        # time.sleep(int(configs["sync"]["time"]))

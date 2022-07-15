@@ -257,8 +257,8 @@ if __name__ == '__main__':
     with open(filepath, 'r') as f:  # 用with读取文件更好
         configs = yaml.load(f, Loader=yaml.FullLoader)  # 按字典格式读取并返回
 
-    # while True:
+    while True:
         date_p = datetime.now().date()
         logger.info("洗版日期：" + str(date_p))
         check()
-        # time.sleep(int(configs["sync"]["time"]))
+        time.sleep(int(configs["sync"]["time"]))

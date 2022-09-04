@@ -21,7 +21,6 @@ def search(mediaList, filePath, dictoryList, canDelMovieList, dictoryDict, movie
     # 下级文件列表
     subMovieList = []
 
-
     # 遍历子文件列表
     for file in mediaList:
         # 属性分割填充

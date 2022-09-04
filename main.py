@@ -25,11 +25,17 @@ def check():
         configs = yaml.load(f, Loader=yaml.FullLoader)  # 按字典格式读取并返回
 
     # 视频目录
+    bootDictoryList = [
+        # '/mnt/user/downloads/media/movies/',
+        # '/mnt/user/downloads/media/series/'
+        '/mnt/movies/',
+        '/mnt/series/'
+    ]
     bootDictoryList = configs["sync"]["container_path"]
 
     # 建立ssh连接
     # getClient = SSHClient()
-    # ssh = getClient.sshConnection('root', 'Jxd283465', '192.168.31.103')
+    # ssh = getClient.sshConnection('root', '1', '192.168.31.103')
 
     # 可删除的视频列表
     canDelMovieList = []
@@ -61,6 +67,7 @@ def check():
 
                 # 换行转为数组
                 mediaList = str(result.read()).split("\n")
+                # mediaList = str(result).split("\n")
 
                 # 删除total行
                 mediaList.pop(0)
@@ -95,17 +102,38 @@ def check():
         i = 0
         for movie in movieDict[file.fileRoute]:
             if movie.filePath not in canDelMoviePathList:
-                i = i + 1
+                i = 1
+                continue
 
         if i == 0:
-            canDelDictoryList.append(file.fileRoute)
+            fileRoutes = str(file.fileRoute).split("/")
+            parentRoute = ""
+            for j in range(len(fileRoutes) - 1):
+                parentRoute = parentRoute + fileRoutes[j] + "/"
+                for boot in bootDictoryList:
+                    if str(boot) in parentRoute and boot != parentRoute:
+                        for movie in movieDict[parentRoute]:
+                            if movie.filePath not in canDelMoviePathList:
+                                i = 1
+                                continue
+
+            if i == 0:
+                canDelDictoryList.append(file.fileRoute)
+            else:
+                waitDelMoviePathList.append(file.filePath)
+                if file.filePath in canDelMoviePathList:
+                    canDelMoviePathList.remove(file.filePath)
 
         if i > 0:
             waitDelMoviePathList.append(file.filePath)
-            canDelMoviePathList.remove(file.filePath)
+            if file.filePath in canDelMoviePathList:
+                canDelMoviePathList.remove(file.filePath)
 
     # 可删除文件夹列表去重
     canDelMoviePathList = getNonRepeatList(canDelMoviePathList)
+
+    # 可删除文件夹列表去重
+    waitDelMoviePathList = getNonRepeatList(waitDelMoviePathList)
 
     # 遍历可删除文件夹列表，排除跟路径
     for bootDictory in bootDictoryList:

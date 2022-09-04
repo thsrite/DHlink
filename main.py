@@ -25,12 +25,12 @@ def check():
         configs = yaml.load(f, Loader=yaml.FullLoader)  # 按字典格式读取并返回
 
     # 视频目录
-    bootDictoryList = [
+    #bootDictoryList = [
         # '/mnt/user/downloads/media/movies/',
         # '/mnt/user/downloads/media/series/'
-        '/mnt/movies/',
-        '/mnt/series/'
-    ]
+       # '/mnt/movies/',
+       # '/mnt/series/'
+    #]
     bootDictoryList = configs["sync"]["container_path"]
 
     # 建立ssh连接
@@ -210,6 +210,9 @@ def check():
                     i = i + 1
             if canDelDictory in canDelDictoryList and i > 0:
                 canDelDictoryList.remove(canDelDictory)
+
+        if canDelDictory not in canDelMoviePathList and canDelDictory in canDelDictoryList:
+            canDelDictoryList.remove(canDelDictory)
 
     logger.info("可删除文件夹列表==》" + json.dumps(canDelDictoryList))
 

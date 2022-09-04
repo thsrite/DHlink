@@ -9,3 +9,8 @@ sync:
   search_day: 7
   search_size: 100
   auto_del: false
+  container_path: [
+        '/mnt/movies/',
+        '/mnt/series/',
+        '/mnt/anime/'
+    ]

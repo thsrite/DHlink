@@ -20,12 +20,12 @@ KZT.setLevel(logging.DEBUG)
 logger.addHandler(KZT)
 
 def check():
+    filepath = os.path.join("/mnt/", 'config.yaml')  # 文件路径,这里需要将a.yaml文件与本程序文件放在同级目录下
+    with open(filepath, 'r') as f:  # 用with读取文件更好
+        configs = yaml.load(f, Loader=yaml.FullLoader)  # 按字典格式读取并返回
 
     # 视频目录
-    bootDictoryList = [
-        '/mnt/movies/',
-        '/mnt/series/'
-    ]
+    bootDictoryList = configs["sync"]["container_path"]
 
     # 建立ssh连接
     # getClient = SSHClient()

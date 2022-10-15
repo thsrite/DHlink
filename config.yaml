@@ -14,3 +14,15 @@ sync:
         '/mnt/series/',
         '/mnt/anime/'
     ]
+
+check:
+  status: true
+  time: 60
+  log: true
+
+wechat:
+  corp_id:
+  secret:
+  agent_id:
+  to_user:
+

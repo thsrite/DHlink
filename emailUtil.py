@@ -1,6 +1,7 @@
 import smtplib
 from email.mime.text import MIMEText
 from email.header import Header
+from wechat import SendWeiXinWork
 import yaml
 import os
 
@@ -34,9 +35,9 @@ def sendmail(canDelDictoryList, canDelMoviePathList, waitDelMoviePathList):
 
     title = title + "\n\n"
 
-    title = title + '没有硬链但是同级或者上级目录存在硬链视频文件的视频路径如下（不建议删除，影响做种）：\n'
-    for waitPath in waitDelMoviePathList:
-        title = title + waitPath + "\n\n"
+    #title = title + '没有硬链但是同级或者上级目录存在硬链视频文件的视频路径如下（不建议删除，影响做种）：\n'
+    #for waitPath in waitDelMoviePathList:
+    #    title = title + waitPath + "\n\n"
 
     message = MIMEText(title, 'plain', 'utf-8')
     message['From'] = Header("硬连接洗版通知", 'utf-8')
@@ -50,3 +51,5 @@ def sendmail(canDelDictoryList, canDelMoviePathList, waitDelMoviePathList):
     smtpObj.connect(mail_host, 25)  # 25 为 SMTP 端口号
     smtpObj.login(mail_user, mail_pass)
     smtpObj.sendmail(sender, receivers, message.as_string())
+
+    SendWeiXinWork.send_message(title)

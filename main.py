@@ -8,6 +8,7 @@ import yaml
 import logging
 
 from arrayUtil import getNonRepeatList
+from check import nocix
 from emailUtil import sendmail
 from search import search
 
@@ -218,7 +219,7 @@ def check():
 
     logger.info("可删除视频路径列表==》" + json.dumps(canDelMoviePathList))
 
-    logger.info("有关联不建议删除视频路径列表==》" + json.dumps(waitDelMoviePathList))
+   # logger.info("有关联不建议删除视频路径列表==》" + json.dumps(waitDelMoviePathList))
 
     # 删除逻辑
     if bool(configs["sync"]["auto_del"]) == True:
@@ -263,6 +264,9 @@ if __name__ == '__main__':
     filepath = os.path.join("/mnt/", 'config.yaml')  # 文件路径,这里需要将a.yaml文件与本程序文件放在同级目录下
     with open(filepath, 'r') as f:  # 用with读取文件更好
         configs = yaml.load(f, Loader=yaml.FullLoader)  # 按字典格式读取并返回
+
+    if bool(configs["check"]["status"]) == True:
+        nocix()
 
     while True:
         date_p = datetime.now().date()

@@ -6,6 +6,7 @@ import time
 from copy import deepcopy
 import yaml
 import logging
+import threading
 
 from arrayUtil import getNonRepeatList
 from check import nocix
@@ -260,16 +261,24 @@ def check():
 
     # getClient.close(ssh)
 
+def check_media():
+    while True:
+        date_p = datetime.now().date()
+        logger.info("洗版日期：" + str(date_p))
+        check()
+        time.sleep(int(configs["sync"]["time"]))
+
 if __name__ == '__main__':
     filepath = os.path.join("/mnt/", 'config.yaml')  # 文件路径,这里需要将a.yaml文件与本程序文件放在同级目录下
     with open(filepath, 'r') as f:  # 用with读取文件更好
         configs = yaml.load(f, Loader=yaml.FullLoader)  # 按字典格式读取并返回
 
     if bool(configs["check"]["status"]) == True:
-        nocix()
+        p1 = threading.Thread(target=nocix, args=(logger,))
+        p1.start()
 
-    while True:
-        date_p = datetime.now().date()
-        logger.info("洗版日期：" + str(date_p))
-        check()
-        time.sleep(int(configs["sync"]["time"]))
+    if bool(configs["sync"]["status"]) == True:
+        p2 = threading.Thread(target=check_media, args=())
+        p2.start()
+
+

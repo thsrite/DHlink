@@ -51,6 +51,10 @@ class SendWeiXinWork():
 
 
 if __name__ == '__main__':
-    SendWeiXinWork = SendWeiXinWork()
-    SendWeiXinWork.send_message("测试a")
+    # SendWeiXinWork = SendWeiXinWork()
+    # SendWeiXinWork.send_message("测试a")
+    url = "https://www.nocix.net/cart/?id=261"
+    req = requests.get(url=url)
+    res = req.content
+
 

@@ -1,9 +1,12 @@
 import smtplib
+from datetime import datetime
 from email.mime.text import MIMEText
 from email.header import Header
-from wechat import SendWeiXinWork
 import yaml
 import os
+
+import wechat
+
 
 def sendmail(canDelDictoryList, canDelMoviePathList, waitDelMoviePathList):
     filepath = os.path.join("/mnt", 'config.yaml')  # 文件路径,这里需要将a.yaml文件与本程序文件放在同级目录下
@@ -21,8 +24,11 @@ def sendmail(canDelDictoryList, canDelMoviePathList, waitDelMoviePathList):
     # 删除逻辑
     auto_del = bool(configs["sync"]["auto_del"])
 
-    title = '仅统计创建7天以上，文件大小100M以上的视频及文件夹\n\n' \
-              '没有硬链的视频路径如下：' + ('(auto_del=true，已自动删除)\n' if auto_del else '\n')
+    date_p = datetime.now().date()
+
+    title = '洗版日期：' + str(date_p) +"\n\n" \
+            '仅统计创建7天以上，文件大小100M以上的视频及文件夹\n\n' \
+            '没有硬链的视频路径如下：' + ('(auto_del=true，已自动删除)\n' if auto_del else '\n')
 
     for moviePath in canDelMoviePathList:
         title = title + moviePath + "\n\n"
@@ -35,15 +41,16 @@ def sendmail(canDelDictoryList, canDelMoviePathList, waitDelMoviePathList):
 
     title = title + "\n\n"
 
-    #title = title + '没有硬链但是同级或者上级目录存在硬链视频文件的视频路径如下（不建议删除，影响做种）：\n'
-    #for waitPath in waitDelMoviePathList:
+    # title = title + '没有硬链但是同级或者上级目录存在硬链视频文件的视频路径如下（不建议删除，影响做种）：\n'
+    # for waitPath in waitDelMoviePathList:
     #    title = title + waitPath + "\n\n"
 
     message = MIMEText(title, 'plain', 'utf-8')
     message['From'] = Header("硬连接洗版通知", 'utf-8')
     message['To'] = Header("pter", 'utf-8')
 
-    subject  = "创建七天、100M以上没有硬链视频" + str(len(canDelMoviePathList)) + "个，文件" + str(len(canDelDictoryList)) + "个，无硬链有关联不建议删除视频" + str(len(waitDelMoviePathList)) + "个"
+    subject = "创建七天、100M以上没有硬链视频" + str(len(canDelMoviePathList)) + "个，文件" + str(
+        len(canDelDictoryList)) + "个，无硬链有关联不建议删除视频" + str(len(waitDelMoviePathList)) + "个"
 
     message['Subject'] = Header(subject, 'utf-8')
 
@@ -52,4 +59,5 @@ def sendmail(canDelDictoryList, canDelMoviePathList, waitDelMoviePathList):
     smtpObj.login(mail_user, mail_pass)
     smtpObj.sendmail(sender, receivers, message.as_string())
 
-    SendWeiXinWork.send_message(title)
+    senWx = wechat.SendWeiXinWork()
+    senWx.send_message(content=str(title))

@@ -54,10 +54,12 @@ def sendmail(canDelDictoryList, canDelMoviePathList, waitDelMoviePathList):
 
     message['Subject'] = Header(subject, 'utf-8')
 
-    smtpObj = smtplib.SMTP()
-    smtpObj.connect(mail_host, 25)  # 25 为 SMTP 端口号
-    smtpObj.login(mail_user, mail_pass)
-    smtpObj.sendmail(sender, receivers, message.as_string())
+    if bool(configs["stmp"]["status"]) == True:
+        smtpObj = smtplib.SMTP()
+        smtpObj.connect(mail_host, 25)  # 25 为 SMTP 端口号
+        smtpObj.login(mail_user, mail_pass)
+        smtpObj.sendmail(sender, receivers, message.as_string())
 
-    senWx = wechat.SendWeiXinWork()
-    senWx.send_message(content=str(title))
+    if bool(configs["wechat"]["status"]) == True:
+        senWx = wechat.SendWeiXinWork()
+        senWx.send_message(content=str(title))

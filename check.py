@@ -22,7 +22,7 @@ def nocix(logger):
                 senWx = wechat.SendWeiXinWork()
                 senWx.send_message(url + "\n到货了")
             else:
-                if bool(configs["check"]["log"]) == True:
+                if bool(configs["nocix"]["log"]) == True:
                     logger.warning("没货了，持续刷新中")
 
-        time.sleep(int(configs["check"]["time"]))
+        time.sleep(int(configs["nocix"]["time"]))

@@ -10,7 +10,7 @@ import threading
 
 from arrayUtil import getNonRepeatList
 from check import nocix
-from emailUtil import sendmail
+from msgUtil import sendmail
 from search import search
 
 logging.basicConfig(filename="dhlink", format='%(asctime)s - %(name)s - %(levelname)s -%(module)s:  %(message)s',
@@ -273,7 +273,7 @@ if __name__ == '__main__':
     with open(filepath, 'r') as f:  # 用with读取文件更好
         configs = yaml.load(f, Loader=yaml.FullLoader)  # 按字典格式读取并返回
 
-    if bool(configs["check"]["status"]) == True:
+    if bool(configs["nocix"]["status"]) == True:
         p1 = threading.Thread(target=nocix, args=(logger,))
         p1.start()
 
